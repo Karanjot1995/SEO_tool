@@ -1,7 +1,7 @@
 {
   "name": "seo_tool",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "react": "^16.5.0",
     "react-bar-chart": "^0.1.2",

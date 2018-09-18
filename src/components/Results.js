@@ -7,7 +7,7 @@ class Results extends Component {
 	state = {
 		title: 25,
 		metaDescription: 100,
-		passed: 0,
+		passed: this.props.passed,
 		failed: 0
 	}
 	passed = (current,max) => {
@@ -33,11 +33,11 @@ class Results extends Component {
         	<th colspan="2">COMMON SEO ISSUES</th>
         	<tr>
         	  <th><p>{this.passed(title,70)}Meta Title</p></th>
-        		<td>The meta title of your page has a length of {title} characters. Most search engines will truncate meta titles to 70 characters</td>
+        		<td>{this.state.passed}The meta title of your page has a length of {title} characters. Most search engines will truncate meta titles to 70 characters</td>
         	</tr>
         	<tr>
         		<th><p>{this.passed(metaDescription,160)}Meta Descrpition</p></th>
-        		<td>{this.state.passed}The meta description of your page has a length of {metaDescription} characters. Most search engines will truncate meta descriptions to 160 characters.</td>
+        		<td>The meta description of your page has a length of {metaDescription} characters. Most search engines will truncate meta descriptions to 160 characters.</td>
         	</tr>
         </table>
       </div>
