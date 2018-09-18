@@ -1,0 +1,63 @@
+rect.bar{
+	width:50px;
+}
+
+.y >text{
+	display: none;
+}
+.y g:nth-of-type(2n){
+	display:none;
+}
+.x .tick>text{
+	display: none
+}
+.status{
+	display: flex;
+	list-style-type: none;
+	padding-left: 0;
+}
+.status li{
+	padding:0px 13px;
+	position: relative;
+	font-size: 13px;
+
+}
+.status li:before{
+	position: absolute;
+	left:0;
+	top:3px;
+	content: "";
+	width:10px;
+	height:10px;
+}
+.status .passed:before{
+	background: rgb(10, 144, 27)
+}
+.status .failed:before{
+	background:#B9160D ;
+}
+.status .warnings:before{
+	background: rgb(230, 126, 34)
+}
+.bar:first-of-type{
+	display: none
+}
+.bar:nth-of-type(2) {
+  fill: rgb(10, 144, 27);
+  x:100;
+}
+.bar:nth-of-type(3){
+	fill: #B9160D ;
+	x:160;
+}
+.bar:last-of-type{
+	fill: rgb(230, 126, 34);
+	x:220;
+}
+.y path.domain {
+	d: path('M -2 0 H 0 V 250 H -2');
+}
+.x path.domain{
+	d: path('M -2 2 V 0 H 400 V 2');
+}
+

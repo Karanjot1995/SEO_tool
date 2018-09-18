@@ -4,7 +4,11 @@
   "private": true,
   "dependencies": {
     "react": "^16.5.0",
+    "react-bar-chart": "^0.1.2",
     "react-dom": "^16.5.0",
+    "react-icons": "^3.0.5",
+    "react-progressbar-semicircle": "^1.2.1",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5"
   },
   "scripts": {

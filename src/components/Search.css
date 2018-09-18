@@ -1,5 +1,7 @@
-
-.checkup{
+.Search{
+  text-align: center
+}
+.landing-page{
   height: 100%;
   display: flex;
   flex-flow: column;
@@ -14,6 +16,8 @@
   border-radius: 0px 4px 4px 0px;
   color:#fff;
   font-size: 20px;
+  height:70px;
+  cursor: pointer;
 }
 .checkup-input{
   border-radius:4px 0px 0px 4px;
@@ -39,7 +43,9 @@
 .checkup h1{
 	margin-bottom: 0;
 }
-
+svg >circle:first-of-type{
+  stroke: #e0e0e0;
+}
 
 @media all and (min-width: 600px){
 	.checkup h1{

@@ -1,3 +1,42 @@
-.App {
-  text-align: center;
+.Graph{
+	text-align: center;
+	margin: auto
+}
+.progress-bar{
+	text-align: center;
+	margin-top:100px;
+	font-size:40px;
+	font-weight: 700;
+	width: 50%
+}
+.checkup{
+	text-align: center;
+}
+.report{
+	display: flex;
+	flex-flow: row;
+	margin-top: 50px;
+	margin-bottom:50px;
+	width:90%;
+}
+.check{
+  color: green;
+  margin: 0px 5px;
+}
+.cross{
+	color: #B9160D;
+	width:20px;
+	height:20px;
+	margin: 0px 5px;
+
+}
+@media all and (max-width: 768px){
+	.report{
+    flex-flow: column;
+    align-items: center;
+	}
+	.Graph{
+		margin-top:100px;
+	}
+	
 }
