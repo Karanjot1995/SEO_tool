@@ -7,7 +7,11 @@
 	margin-top:100px;
 	font-size:40px;
 	font-weight: 700;
-	width: 50%
+	width: 50%;
+	animation:move 2s linear;
+}
+.progress-bar p{
+	font-size: 20px;
 }
 .checkup{
 	text-align: center;
