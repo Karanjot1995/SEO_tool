@@ -1,14 +1,26 @@
-export const INCREMENT = "INCREMENT";
+export const PASSED = "PASSED";
 export const FAILED = "FAILED"
+export const WARNING = "WARNING"
+export const TOTAL = "TOTAL"
 
-export function increment () {
+export function passed () {
  return {
-  type: INCREMENT,
+  type: PASSED,
   }
 }
 export function failed () {
   return {
     type: FAILED,
+  }
+}
+export function warning () {
+  return {
+    type: WARNING
+  }
+}
+export function total (){
+  return {
+    type: TOTAL
   }
 }
       

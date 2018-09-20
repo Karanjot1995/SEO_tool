@@ -24,6 +24,7 @@ table td, table th{
 	border:1px solid #e0e0e0;
 	padding:20px;
 }
-table tr>th>p{
+table tr>th p{
 	display: flex;
+	color: #000;
 }

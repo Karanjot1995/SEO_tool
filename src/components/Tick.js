@@ -3,7 +3,7 @@ import {FaCheck} from 'react-icons/fa'
 
 class Tick extends Component {
  componentWillMount(){
-    this.props.inc();
+    this.props.pass();
   }
   render() {
     return (
