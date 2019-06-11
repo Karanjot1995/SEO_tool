@@ -10,18 +10,18 @@ class CheckUp extends Component {
   componentDidMount() {
    	const {passed, total, stroke} = this.props
    	var score = passed/total
-   	if (passed> 75) {
+   	if (score> 75) {
    		this.setState({
    			stroke: 'rgb(10, 144, 27)'
    		})
 
    	}
-   	else if(passed <50) {
+   	else if(score <50) {
    		this.setState({
    			stroke: '#B9160D'
    		})
    	}
-   	else if(passed < 75 && passed>50){
+   	else if(score < 75 && passed>50){
    		this.setState({
    			stroke: 'rgb(230, 126, 34)'
    		})
@@ -29,10 +29,11 @@ class CheckUp extends Component {
   }
   
   render() {
-    const {data, passed, failed, total, stroke}= this.props
+    const {data, passed, failed, total, stroke}= this.props;
+    
     return (
       <div className="checkup">
-        <h1>SeoSiteCheckup Score:</h1>
+        <h1>Website SEO Score</h1>
         <div className="report">
 
           <div className="progress-bar">
@@ -40,7 +41,7 @@ class CheckUp extends Component {
             strokeWidth={40} 
             stroke={stroke} 
             diameter={300} 
-            percentage={parseInt(passed/total*100)} 
+            percentage={parseInt((passed)/(total)*100)} 
             showPercentValue />
             <p>Score {passed} / {total}</p>
           </div>
@@ -61,7 +62,9 @@ function mapStateToProps(state) {
   return{
   	data: state.data,
   	total: state.total,
-  	stroke: state.stroke
+    stroke: state.stroke,
+    passed:state.passed
+   
   }
 }
 export default connect(mapStateToProps)(CheckUp);
