@@ -10,16 +10,17 @@ import {connect} from 'react-redux'
 
 class App extends Component {
 state={
-  pageLink: ""
+  pageLink: "",
 
 }
+
 
   render() {
     return (
       <div className="App">
       <Switch>
         <Route exact path='/' render={() =>(<Search/>)} />
-        <Route exact path='/checkup' render={() =>(<Compile/>)} />
+        <Route exact path='/checkup' render={() =>(<Compile/>)}/>
       </Switch>
       </div>
     );
