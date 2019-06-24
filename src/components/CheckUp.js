@@ -6,30 +6,28 @@ import {passed} from '../actions'
 import {connect} from 'react-redux'
 
 class CheckUp extends Component {
-
-  componentDidMount() {
-   	const {passed, total, stroke} = this.props
-   	var score = passed/total
-   	if (score> 75) {
-   		this.setState({
-   			stroke: 'rgb(10, 144, 27)'
-   		})
-
-   	}
-   	else if(score <50) {
-   		this.setState({
-   			stroke: '#B9160D'
-   		})
-   	}
-   	else if(score < 75 && passed>50){
-   		this.setState({
-   			stroke: 'rgb(230, 126, 34)'
-   		})
-   	}
-  }
-  
+ 
   render() {
-    const {data, passed, failed, total, stroke}= this.props;
+
+    const {data, passed, total}= this.props;
+    const percentage = parseInt((passed)/(total)*100);
+
+    let stroke= "";
+    if (percentage> 75) {
+     
+        stroke='rgb(10, 144, 27)';
+         
+    }
+    else if(percentage <=50) {
+      
+        stroke= '#B9160D';
+     
+    }
+    else if(percentage <= 75 && percentage>50){
+      stroke= 'rgb(230, 126, 34)';
+      
+    }
+     
     
     return (
       <div className="checkup">
@@ -41,7 +39,7 @@ class CheckUp extends Component {
             strokeWidth={40} 
             stroke={stroke} 
             diameter={300} 
-            percentage={parseInt((passed)/(total)*100)} 
+            percentage={percentage} 
             showPercentValue />
             <p>Score {passed} / {total}</p>
           </div>
@@ -61,9 +59,9 @@ class CheckUp extends Component {
 function mapStateToProps(state) {
   return{
   	data: state.data,
-  	total: state.total,
-    stroke: state.stroke,
-    passed:state.passed
+  	// total: state.total,
+    // passed:state.passed,
+    // // stroke: state.stroke,
    
   }
 }

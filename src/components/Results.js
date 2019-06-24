@@ -16,9 +16,9 @@ class Results extends Component {
 		h2: this.props.h2tag,
 		h3: this.props.h3tag,
 		h4: this.props.h4tag,
-
-		// loaded: false
 	}
+
+
 	
 	pass = ()=>{
 		this.props.dispatch(passed())
@@ -26,9 +26,23 @@ class Results extends Component {
 	fail = () =>{
 		this.props.dispatch(failed())
 	}
-	passed = (current,max) => {
+	titlepass = (current,max) => {
 
-	  if(current < max){
+		if(current && current < max){
+			
+	  	return (
+	   		<Tick pass={this.pass}/>	
+	   	)
+	  }else{
+		
+	 	  return(
+	 	 	  <Cross fail={this.fail}/>
+	 	  )
+	  }	
+	}
+	metapassed = (max) => {
+
+		if(this.state.metaDescription && this.state.metaDescription < max){
 			
 	  	return (
 	   		<Tick pass={this.pass}/>	
@@ -151,28 +165,25 @@ class Results extends Component {
 
   render() {
   	
-  	// const {failed, warnings } = this.state;
-		const {passed,failed, warnings}= this.props;
+		const {passed,failed, warnings,total}= this.props;
 		const{ title,metaDescription,h1,h2,h3,h4} = this.state;
-		// if (!loaded) {
-    //   return <div>Loading...</div>;
-    // } else {
+		
 		
     return (
 			
     	<div>
-	    	<CheckUp passed={passed} failed={failed} warnings={warnings}/>
+	    	<CheckUp passed={passed} failed={failed} warnings={warnings} total={total} percentage={parseInt((passed)/(total)*100)} stroke={this.state.stroke}/>
 	      <div className="results">
 	        <table>
 
 	        	<th colSpan="2">COMMON SEO ISSUES</th>
 	        	<tr>
-	        	  <th><Link to='/metaTitle'><p >{this.passed(title,70)}Meta Title</p></Link></th>
+	        	  <th><Link to='/metaTitle'><p >{this.titlepass(title,70)}Meta Title</p></Link></th>
 	        		<td>The meta title of your page has a length of {title} characters. Most search engines will truncate meta titles to 70 characters</td>
 	        	</tr>
 
 	        	<tr>
-	        		<th><Link to='/metaDescription'><p>{this.passed(metaDescription,160)}Meta Descrpition</p></Link></th>
+	        		<th><Link to='/metaDescription'><p>{this.metapassed(160)}Meta Descrpition</p></Link></th>
 	        		<td>The meta description of your page has a length of {metaDescription} characters. Most search engines will truncate meta descriptions to 160 characters.</td>
 	        	</tr>
 						<tr>
@@ -215,6 +226,7 @@ function mapStateToProps(state) {
 		passed: state.passed,
 		failed: state.failed,
 		warnings: state.warnings,
+		total: state.total
 	}
 }
 

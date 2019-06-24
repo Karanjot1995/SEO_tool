@@ -12,7 +12,7 @@ const initialState = {
         ],
 
   total: 0,
-  stroke: 'rgb(230, 126, 34)'
+  // stroke: 'rgb(230, 126, 34)'
 }
 
 function reducer (state = initialState , action) {
@@ -28,7 +28,7 @@ function reducer (state = initialState , action) {
              {text: 'Warnings', value: (state.warnings)},
           ],
         total: state.total + 1,
-        stroke: state.stroke
+        // stroke: state.stroke
     };
     case "FAILED" :
     return {
@@ -41,7 +41,7 @@ function reducer (state = initialState , action) {
              {text: 'Warnings', value: (state.warnings)},
           ],
         total: state.total + 1,
-        stroke: state.stroke
+        // stroke: state.stroke
       }
       case "WARNING" :
       return {
@@ -54,7 +54,7 @@ function reducer (state = initialState , action) {
              {text: 'Warnings', value: (state.warnings + 1)},
           ],
         total: state.total + 1,
-        stroke: state.stroke
+        // stroke: state.stroke
 
       }
       /*case "TOTAL" :

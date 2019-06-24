@@ -11,8 +11,8 @@ import {Switch, Route} from 'react-router-dom'
 class Compile extends Component {
   state ={
     title: '',
-    metaDescription: false,
     loaded: false,
+    metaDescription: false,
     h1tag: false,
     h2tag: false,
     h3tag: false,
@@ -30,7 +30,8 @@ class Compile extends Component {
 			const doc = new DOMParser().parseFromString(html, "text/html");
       const title = doc.getElementsByTagName('title')[0].innerHTML;
       // var metaDescription = doc.getElementsByTagName('meta')['description']
-      var metaDescription = doc.getElementsByTagName('meta')['description'].getAttribute("content").length;
+      var metaDescription = doc.getElementsByTagName('meta')['description'];
+      metaDescription= metaDescription?metaDescription.getAttribute("content").length: false ;
       var h1 = doc.getElementsByTagName('h1')[0];
       var h2 = doc.getElementsByTagName('h2')[0];
       var h3 = doc.getElementsByTagName('h3')[0];
@@ -47,11 +48,29 @@ class Compile extends Component {
         h3tag: h4
 			})
     });
+    // const {passed, total} = this.props
+		// var score = passed/total
+		// if (score> 75) {
+		// 	this.setState({
+		// 		stroke: 'rgb(10, 144, 27)'
+		// 	})
+
+		// }
+		// else if(score <50) {
+		// 	this.setState({
+		// 		stroke: '#B9160D'
+		// 	})
+		// }
+		// else if(score < 75 && passed>50){
+		// 	this.setState({
+		// 		stroke: 'rgb(230, 126, 34)'
+		// 	})
+		// }
 	}
   
 
   render() {
-    const {loaded, title, metaDescription, h1tag, h2tag,h3tag,h4tag} = this.state
+    const { loaded, title, metaDescription, h1tag, h2tag,h3tag,h4tag} = this.state
     if (!loaded) {
       return <div>Loading...</div>;
     } else {
@@ -70,7 +89,8 @@ function mapStateToProps(state) {
 	return{
 		passed: state.passed,
 		failed: state.failed,
-		warnings: state.warnings,
+    warnings: state.warnings,
+    total: state.total
 	}
 }
 
