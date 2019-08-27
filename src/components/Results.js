@@ -16,8 +16,17 @@ class Results extends Component {
 		h2: this.props.h2tag,
 		h3: this.props.h3tag,
 		h4: this.props.h4tag,
+		sitemap: this.props.sitemap,
+		robots: this.props.robots,
+		imgTitle: this.props.imgTitle,
+		imgAlt: this.props.imgAlt,
+		ogtitle: this.props.ogtitle,
+		ogtype: this.props.ogtype,
+		ogurl: this.props.ogurl,
+		ogsite_name: this.props.ogsite_name,
+		ogimage: this.props.ogimage,
+		ogdescription: this.props.ogdescription
 	}
-
 
 	
 	pass = ()=>{
@@ -67,6 +76,7 @@ class Results extends Component {
 			)
 		}
 	}
+
 	h2Tag = () =>{
 		if (this.state.h2){
 			return (
@@ -105,26 +115,135 @@ class Results extends Component {
 		}
 	}
 
-	
-	// componentDidMount() {
+	sitemapPresent = () =>{
+		if (this.state.sitemap){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
 		
-	// 	let path = this.context.router.route.location.search;
-	// 	path=path.replace('?url=','');
-	// 	fetch("https://cors-anywhere.herokuapp.com/" +`${path}`)
-  //   .then((response) => response.text())
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	robotspresent = () => {
+		if (this.state.robots){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
 		
-  //   .then((html) => {			
-	// 		const doc = new DOMParser().parseFromString(html, "text/html");
-	// 		const title = doc.getElementsByTagName('title')[0].innerText;
-	// 		var metaDescription =doc.getElementsByTagName('meta')['twitter:description'].getAttribute("content");
-	// 		this.setState({
-	// 			title: title.length,
-	// 			metaDescription: metaDescription.length,
-	// 		})
-  //   });
-	// }
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	imgTitle = () =>{
+		if (this.state.imgTitle){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	imgAlt = () =>{
+		if (this.state.imgAlt){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
 	
+	ogtitle = () =>{
+		if (this.state.ogtitle){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	ogsite_name = () =>{
+		if (this.state.ogsite_name){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	ogtype = () =>{
+		if (this.state.ogtype){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	ogurl = () =>{
+		if (this.state.ogurl){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
 	
+	ogimage = () =>{
+		if (this.state.ogimage){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	ogdescription = () =>{
+		if (this.state.ogdescription){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
 	// count=(flag,max)=>{
 	
 	// 		if(flag==='title'){
@@ -160,13 +279,11 @@ class Results extends Component {
 
 	// }
   
- 
-
 
   render() {
   	
 		const {passed,failed, warnings,total}= this.props;
-		const{ title,metaDescription,h1,h2,h3,h4} = this.state;
+		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription} = this.state;
 		
 		
     return (
@@ -183,7 +300,7 @@ class Results extends Component {
 	        	</tr>
 
 	        	<tr>
-	        		<th><Link to='/metaDescription'><p>{this.metapassed(160)}Meta Descrpition</p></Link></th>
+	        		<th><Link to='/metaDescription'><p>{this.metapassed(250)}Meta Descrpition</p></Link></th>
 	        		<td>The meta description of your page has a length of {metaDescription} characters. Most search engines will truncate meta descriptions to 160 characters.</td>
 	        	</tr>
 						<tr>
@@ -203,15 +320,56 @@ class Results extends Component {
 	        	  <th><Link to='/h3tag'><p >{this.h4Tag(h4,0)}H4 Heading Tag</p></Link></th>
 	        		<td>{h4 ? ('H4 is present') : ('H4 is not present')}</td>
 	        	</tr>
-						{/* <tr>
-	        	  <th><Link to='/h3tag'><p >{this.h3Tag(h3,0)}H3 Heading Tag</p></Link></th>
-	        		<td>{h3 ? ('H3 is present') : ('H3 is not present')}</td>
+
+			    <tr>
+	        	  <th><Link to='/robots'><p >{this.robotspresent(robots,0)}Robots.txt</p></Link></th>
+	        		<td>{robots ? ('robots.txt is present') : ('robots.txt is not present')}</td>
 	        	</tr>
 
 	        	<tr>
-	        		<th><Link to='/metaDescription'><p>{this.passed(metaDescription,70)}Meta Descrpition</p></Link></th>
-	        		<td>The meta description of your page has a length of {metaDescription} characters. Most search engines will truncate meta descriptions to 50 characters.</td>
-	        	</tr> */}
+	        		<th><Link to='/metaDescription'><p>{this.sitemapPresent(sitemap,0)}Sitemap</p></Link></th>
+	        		<td>{sitemap ? ('sitemap is present') : ('sitemap is not present')}</td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.imgTitle(imgTitle,0)}Image Title Tags</p></Link></th>
+	        		<td>{imgTitle ? ('image title tags are present') : ('some image title tags are missing')}</td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.imgAlt(imgAlt,0)}Image Alt Tags</p></Link></th>
+	        		<td>{imgAlt ? ('image Alt tags are present') : ('some image Alt tags are missing')}</td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.ogtitle(ogtitle,0)}og:title</p></Link></th>
+	        		<td>{ogtitle ? ('og:title present') : ('og:title missing')}<br/>{ogtitle}</td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.ogtype(ogtype,0)}og:type</p></Link></th>
+	        		<td>{ogtype ? ('og:type present') : ('og:type missing')}<br/>{ogtype}</td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.ogurl(ogurl,0)}og:url</p></Link></th>
+	        		<td>{ogurl ? ('og:url present') : ('og:url missing')}<br/>{ogurl}</td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.ogsite_name(ogsite_name,0)}og:site_name</p></Link></th>
+	        		<td>{ogsite_name ? ('og:site_name present') : ('og:site_name missing')}<br/>{ogsite_name}</td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.ogimage(ogimage,0)}og:image</p></Link></th>
+	        		<td>{ogimage ? ('og:image present') : ('og:image missing')}<br/><a href={ogimage} target="_blank">{ogimage}</a></td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.ogdescription(ogdescription,0)}og:description</p></Link></th>
+	        		<td>{ogdescription ? ('og:description present') : ('og:description missing')}<br/>{ogdescription}</td>
+	        	</tr>
 					
 	        </table>
 				

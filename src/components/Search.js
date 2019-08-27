@@ -23,7 +23,7 @@ addURL(e) {
       <div className="Search">
       <div className="landing-page">
         <h1>Search Engine Optimization Made Easy</h1>
-        <h3 className="checkup-analysis">User-friendly analysis and monitoring of your site's SEO</h3>
+        <h3 className="checkup-analysis" >User-friendly analysis and monitoring of your site's SEO</h3>
         <form className="checkup-form">
           <input className="checkup-input" type="text" placeholder='Website URL' onChange={(e)=> this.addURL(e)} value={ this.state.pageLink }></input>
           <Link to={'/checkup?url='+this.state.pageLink}>
