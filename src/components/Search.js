@@ -4,11 +4,16 @@ import Compile from './Compile'
 import Results from './Results';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
+import axios from 'axios'
+import API from "./Api";
+
 
 class Search extends Component {
 state = {
   pageLink: "",
+  persons: []
 }
+
 
 addURL(e) {
   this.setState({
@@ -16,6 +21,7 @@ addURL(e) {
   })
   // return <Compile/>
 }
+
 
 
   render() {

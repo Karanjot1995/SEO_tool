@@ -25,7 +25,8 @@ class Results extends Component {
 		ogurl: this.props.ogurl,
 		ogsite_name: this.props.ogsite_name,
 		ogimage: this.props.ogimage,
-		ogdescription: this.props.ogdescription
+		ogdescription: this.props.ogdescription,
+		response: this.props.response,
 	}
 
 	
@@ -281,7 +282,6 @@ class Results extends Component {
   
 
   render() {
-  	
 		const {passed,failed, warnings,total}= this.props;
 		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription} = this.state;
 		
@@ -374,6 +374,7 @@ class Results extends Component {
 	        </table>
 				
 	      </div>
+		  {this.state.response}
 			</div>
 		);
 		

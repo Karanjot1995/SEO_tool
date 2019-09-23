@@ -11,42 +11,50 @@ import {connect} from 'react-redux'
 class App extends Component {
 state={
   pageLink: "",
-  response: '',
   post: '',
   responseToPost: '',
 
 }
 
-componentDidMount() {
-  this.callApi()
-    .then(res => this.setState({ response: res.array[1] }))
-    .catch(err => console.log(err));
-}
+// componentDidMount() {
+//   this.callApi()
+//     .then(res => 
+//       res.test)
+//       // this.setState({ response: res.test }))
+//     .then((html) => {
+//       const doc = new DOMParser().parseFromString(html, "text/html");
+//       console.log(doc)
+//       const title = doc.getElementsByTagName('title')[0].innerHTML;
+//       console.log(title)
+      
+//     })
+//     // .catch(err => console.log(err));
+// }
 
-callApi = async () => {
-  const response = await fetch('/api/hello');
-  const body = await response.json();
-  if (response.status !== 200) throw Error(body.message);
-  console.log(body)
+// callApi = async () => {
+//   const response = await fetch('/api/hello');
+//   const body = await response.json();
+//   if (response.status !== 200) throw Error(body.message);
+//   console.log(body)
 
-  return body;
-};
+//   return body;
+// };
 
-handleSubmit = async e => {
-  e.preventDefault();
-  const response = await fetch('/api/world', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // 'Access-Control-Allow-Origin':'*',
-    },
-    body: JSON.stringify({ post: this.state.post }),
-  });
-  const body = await response.text();
+// handleSubmit = async e => {
+//   e.preventDefault();
+//   const response = await fetch('/api/world', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       // 'Access-Control-Allow-Origin':'*',
+//     },
+//     body: JSON.stringify({ post: this.state.post }),
+//   });
+//   const body = await response.text();
   
-  this.setState({ responseToPost: body });
+//   this.setState({ responseToPost: body });
 
-};
+// };
 
 
 
@@ -57,8 +65,8 @@ handleSubmit = async e => {
         <Route exact path='/' render={() =>(<Search/>)} />
         <Route exact path='/checkup' render={() =>(<Compile/>)}/>
       </Switch>
-      <p>{this.state.response}</p>
-        <form onSubmit={this.handleSubmit}>
+      {/* <p>{this.state.response}</p> */}
+        {/* <form onSubmit={this.handleSubmit}>
           <p>
             <strong>Post to Server:</strong>
           </p>
@@ -69,7 +77,7 @@ handleSubmit = async e => {
           />
           <button type="submit">Submit</button>
         </form>
-        <p>{this.state.responseToPost}</p>
+        <p>{this.state.responseToPost}</p> */}
       </div>
     );
   }
