@@ -27,9 +27,19 @@ class Results extends Component {
 		ogimage: this.props.ogimage,
 		ogdescription: this.props.ogdescription,
 		response: this.props.response,
+		img: 'https://cdn.sstatic.net/Img/home/public-qa.svg?v=d82acaa7df9f',
+		seconds: 0,
+		beforeload:0,
 	}
 
 	
+    // checksize(){
+	// 	if(this.file.size > 200){
+	// 		alert("File is too big!");
+	// 		this.value = "";
+	// 	 };
+	// }
+
 	pass = ()=>{
 		this.props.dispatch(passed())
 	}
@@ -279,9 +289,22 @@ class Results extends Component {
 	// 	// })
 
 	// }
+	componentWillMount(){
+		
+      this.setState({
+		  beforeload: (new Date()).getTime()
+	  })
+	}
+	pageloadingtime(){
+	  var afterload = (new Date()).getTime();
+	  this.setState({seconds:(afterload-this.state.beforeload)/1000})
+		
+	}
   
 
   render() {
+
+
 		const {passed,failed, warnings,total}= this.props;
 		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription} = this.state;
 		
@@ -372,9 +395,18 @@ class Results extends Component {
 	        	</tr>
 					
 	        </table>
+
+			<div id="loadingtime"></div>
+
+
+				{/* <iframe id="iframe1" width="800" height="350" src="https://www.discernliving.com/" onLoad={()=>this.pageloadingtime()}></iframe>
+
+				<input type="button" value="Reload" onClick="Reload();"/>
+				{this.state.seconds} */}
+
 				
 	      </div>
-		  {this.state.response}
+		  
 			</div>
 		);
 		
