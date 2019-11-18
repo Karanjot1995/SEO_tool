@@ -30,6 +30,8 @@ class Results extends Component {
 		img: 'https://cdn.sstatic.net/Img/home/public-qa.svg?v=d82acaa7df9f',
 		seconds: 0,
 		beforeload:0,
+		allimagedata: null,
+		loaded: false,
 	}
 
 	
@@ -300,18 +302,41 @@ class Results extends Component {
 	  this.setState({seconds:(afterload-this.state.beforeload)/1000})
 		
 	}
+
+
+	// allImageData(){
+	// 	var imgData = this.props.imageData;
+	// 	var abc = Object.keys(imgData).map(i => (
+				
+	// 		<p key={i}>{JSON.parse(imgData[i].size/1000)}</p>
+	// 	  ))
+	// 	  console.log(abc)
+	// 	  this.setState({
+	// 		  allimagedata: abc
+	// 	  })
+	// }
   
 
   render() {
-
+	
 
 		const {passed,failed, warnings,total}= this.props;
-		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription} = this.state;
+		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription ,loaded} = this.state;
+		console.log('test',this.props.imageData);
+		const imgData=this.props.imageData;
+		const imgurl= this.props.imgurl
+
+		const arr = [];
+		{
+			Object.keys(imgData).map(i => (
+			arr.push(JSON.parse(imgData[i].size/1000)+' kb' , imgurl[i])
+		))}
 		
 		
     return (
 			
     	<div>
+			
 	    	<CheckUp passed={passed} failed={failed} warnings={warnings} total={total} percentage={parseInt((passed)/(total)*100)} stroke={this.state.stroke}/>
 	      <div className="results">
 	        <table>
@@ -393,16 +418,39 @@ class Results extends Component {
 	        		<th><Link to='/metaDescription'><p>{this.ogdescription(ogdescription,0)}og:description</p></Link></th>
 	        		<td>{ogdescription ? ('og:description present') : ('og:description missing')}<br/>{ogdescription}</td>
 	        	</tr>
+				<tr>
+	        		<th><Link to='/metaDescription'><p>Image Size</p></Link></th>
+	        		<td>{arr.join(', ')}</td>
+	        	</tr>
+                {/* {console.log((imgData[i].size/1000))} */}
+				<tr>
+	        		<th><Link to=''><p>Page Load Time</p></Link></th>
+	        		<td>{this.state.seconds}</td>
+	        	</tr>
+
+
 					
 	        </table>
 
-			<div id="loadingtime"></div>
+			{/* <div id="loadingtime"></div>
+			{
+				Object.keys(imgData).map(i => (
+				
+                  <p key={i}>{JSON.parse(imgData[i].size/1000)}</p>
+				))
+
+				}
+			
+			<p></p> */}
 
 
-				{/* <iframe id="iframe1" width="800" height="350" src="https://www.discernliving.com/" onLoad={()=>this.pageloadingtime()}></iframe>
+				<iframe id="iframe1" width="800" height="350" src="https://www.discernliving.com/" onLoad={()=>this.pageloadingtime()}></iframe>
 
 				<input type="button" value="Reload" onClick="Reload();"/>
-				{this.state.seconds} */}
+				{this.state.seconds}
+
+
+
 
 				
 	      </div>
