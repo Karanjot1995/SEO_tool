@@ -7,6 +7,8 @@ import {connect} from 'react-redux'
 import {passed, failed} from '../actions'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types';
+import Iframe from 'react-iframe'
+// import {WebView} from 'react';
 
 class Results extends Component {
 	state={
@@ -32,6 +34,9 @@ class Results extends Component {
 		beforeload:0,
 		allimagedata: null,
 		loaded: false,
+		siteurl: this.props.siteurl,
+		checkIframe: this.props.checkIframe,
+		checkJs: this.props.checkJs
 	}
 
 	
@@ -257,6 +262,37 @@ class Results extends Component {
 			)
 		}
 	}
+
+	checkIframe = () =>{
+		if (this.state.checkIframe){
+			return (
+				
+				<Cross fail={this.fail}/>	
+			)
+		}else{
+		
+			return(
+				<Tick pass={this.pass}/>
+			)
+		}
+	}
+	
+	
+	checkJs = () =>{
+		if (this.state.checkJs){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+
+
 	// count=(flag,max)=>{
 	
 	// 		if(flag==='title'){
@@ -321,7 +357,7 @@ class Results extends Component {
 	
 
 		const {passed,failed, warnings,total}= this.props;
-		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription ,loaded} = this.state;
+		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription ,loaded, siteurl, checkIframe, checkJs} = this.state;
 		console.log('test',this.props.imageData);
 		const imgData=this.props.imageData;
 		const imgurl= this.props.imgurl
@@ -329,7 +365,7 @@ class Results extends Component {
 		const arr = [];
 		{
 			Object.keys(imgData).map(i => (
-			arr.push(JSON.parse(imgData[i].size/1000)+' kb' , imgurl[i])
+			arr.push(JSON.parse(imgData[i].size/1000)+' kb ' + 'url:' + imgurl[i])
 		))}
 		
 		
@@ -428,6 +464,16 @@ class Results extends Component {
 	        		<td>{this.state.seconds}</td>
 	        	</tr>
 
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.checkIframe()}Iframe</p></Link></th>
+	        		<td>{checkIframe ? ('Iframe detected (This reduces SEO performance)') : ('No Iframe')}<br/></td>
+	        	</tr>
+
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.checkJs()}JavaScript Usage</p></Link></th>
+	        		<td>{checkJs ? ('JavaScript is being used') : ('JavaScript is not being used')}<br/></td>
+	        	</tr>
+
 
 					
 	        </table>
@@ -443,11 +489,22 @@ class Results extends Component {
 			
 			<p></p> */}
 
+{/* <WebView
+  ref={webview => {
+    this.webView = webview;
+  }}
+  onLoadEnd={this.onWebViewLoad}
+  onMessage={this.messageEvent}
+  startInLoadingState={true}
+  javaScriptEnabled={true}
+  source={{html: `<iframe id="iframe1" width="800" height="350" src={siteurl} onLoad={()=>this.pageloadingtime()}></iframe>`}}
+/> */}
 
-				<iframe id="iframe1" width="800" height="350" src="https://www.discernliving.com/" onLoad={()=>this.pageloadingtime()}></iframe>
 
+				<iframe id="iframe1" width="800" height="350" src={siteurl} onLoad={()=>this.pageloadingtime()}></iframe>
 				<input type="button" value="Reload" onClick="Reload();"/>
 				{this.state.seconds}
+				
 
 
 

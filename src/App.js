@@ -8,6 +8,7 @@ import Results from './components/Results'
 import Compile from './components/Compile'
 import {connect} from 'react-redux'
 
+
 class App extends Component {
 state={
   pageLink: "",

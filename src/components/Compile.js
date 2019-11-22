@@ -30,7 +30,10 @@ class Compile extends Component {
     ogdescription: false,
     response: '',
     imageData: [],
-    imgurl:[]
+    imgurl:[],
+    siteurl: "",
+    checkIframe: false,
+    checkJs: false
 
   }
 
@@ -57,6 +60,9 @@ class Compile extends Component {
     //let path = this.context.router.route.location.search;
     const searchParams = new URLSearchParams(this.context.router.history.location.search);
      const url=searchParams.get('url');
+     this.setState({
+       siteurl:url
+     })
      if(url!==""&&url!==null && url!==undefined){
        
      }
@@ -95,6 +101,52 @@ class Compile extends Component {
       var ogdescription = doc.querySelector("meta[property='og:description']");
       ogdescription = ogdescription? ogdescription.getAttribute("content") : false;
 
+      
+
+
+
+
+
+      if(html.indexOf('analytics.js') > -1 || html.indexOf('ga.js') > -1 || html.indexOf('gtag.js') > -1 ){
+        console.log('Google analytics code is present')
+      }else{
+        console.log('Google analytics code is not present')
+      }
+
+
+
+
+
+       
+      //------iFrame------
+
+      var checkIframe = doc.querySelector('iframe') || doc.querySelector('iFrame')
+      checkIframe  = checkIframe? true: false
+
+      if(checkIframe===true){
+        this.setState({
+          checkIframe: true
+        })
+      }
+      console.log(checkIframe)
+
+
+      //-----iFrame-end-------
+
+
+
+      var checkJs = doc.querySelector('script');
+      checkJs  = checkJs? true: false
+
+      if(checkJs===true){
+        this.setState({
+          checkJs: true
+        })
+      }
+
+      console.log(checkJs)
+
+
 
 
       console.log(ogtitle)
@@ -112,12 +164,13 @@ class Compile extends Component {
       var h2 = doc.getElementsByTagName('h2')[0];
       var h3 = doc.getElementsByTagName('h3')[0];
       var h4 = doc.getElementsByTagName('h4')[0];
+      console.log(h4)
 
       //-------------
 
 
 
-
+    //----------------images---------------------
 
       var imgElems = doc.getElementsByTagName('img');
      
@@ -189,9 +242,15 @@ class Compile extends Component {
     ).then(iData => {
       
       this.setState({imageData:iData,loaded: true, imgurl:imgurl});
-      console.log('test',this.state.imageData, imgurl + "<br>");
+      console.log('test',this.state.imageData, imgurl );
       
     })
+    //----------------images-end---------------------
+
+
+
+
+
         
  
 
@@ -205,7 +264,7 @@ class Compile extends Component {
         h1tag: h1,
         h2tag: h2,
         h3tag: h3,
-        h3tag: h4,
+        h4tag: h4,
         ogtitle: ogtitle,
         ogtype: ogtype,
         ogurl: ogurl,
@@ -306,7 +365,7 @@ class Compile extends Component {
 
   render() {
 
-    const { loaded, title, metaDescription, h1tag, h2tag,h3tag,h4tag , sitemap, robots, imgTitle, imgAlt, ogtitle, ogtype, ogurl, ogsite_name, ogimage, ogdescription, imageData, imgurl} = this.state
+    const { loaded, title, metaDescription, h1tag, h2tag,h3tag,h4tag , sitemap, robots, imgTitle, imgAlt, ogtitle, ogtype, ogurl, ogsite_name, ogimage, ogdescription, imageData, imgurl ,siteurl, checkIframe, checkJs} = this.state
     if (!loaded) {
       return <div>Loading...</div>;
     } else {
@@ -316,7 +375,8 @@ class Compile extends Component {
         <Results title={title} metaDescription={metaDescription} h1tag={h1tag} h2tag={h2tag} h3tag={h3tag} 
                  h4tag={h4tag} sitemap={sitemap} robots={robots} imgTitle={imgTitle} imgAlt={imgAlt}
                  ogtitle={ogtitle} ogtype={ogtype} ogurl={ogurl} ogsite_name={ogsite_name}
-                 ogimage= {ogimage} ogdescription= {ogdescription} imageData= {imageData} imgurl={imgurl}
+                 ogimage= {ogimage} ogdescription= {ogdescription} imageData= {imageData} imgurl={imgurl} siteurl={siteurl} checkIframe={checkIframe}
+                 checkJs={checkJs}
         />
 
       </div>
