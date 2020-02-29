@@ -7,6 +7,7 @@ import CheckUp from './components/CheckUp'
 import Results from './components/Results'
 import Compile from './components/Compile'
 import {connect} from 'react-redux'
+import FinalResults from './components/FinalResults'
 
 
 class App extends Component {

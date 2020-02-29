@@ -33,9 +33,14 @@ addURL(e) {
         <form className="checkup-form">
           <input className="checkup-input" type="text" placeholder='Website URL' onChange={(e)=> this.addURL(e)} value={ this.state.pageLink }></input>
           <Link to={'/checkup?url='+this.state.pageLink}>
+           
           <button className="checkup-button" onSubmit={(e)=> this.addURL(e)}>Checkup!</button></Link>
         </form>
       </div>
+      <div>
+              <h3>Keyword search</h3>
+              <input/>
+            </div>
       
       </div>
     )

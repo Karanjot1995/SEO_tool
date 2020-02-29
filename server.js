@@ -1,6 +1,16 @@
 const express = require('express');
+const axios = require('axios');
+const cheerio = require('cheerio');
 const bodyParser = require('body-parser');
-var cors = require('cors');
+var fs = require('fs');
+
+var http = require('http');
+var http = require('follow-redirects').http;
+var https = require('https');
+
+
+const isRelativeUrl = require("is-relative-url");
+
 
 
 // app.use(cors())
@@ -10,57 +20,98 @@ const port = process.env.PORT || 5000;
 const url = require('url');
 
 
+
 var request = require('request');
 
 
 
-const axios = require('axios');
-const cheerio = require('cheerio');
+
+
+
+
+var urls =[];
+app.get('/api/goo',(req,res)=>{
+  var url_parts = url.parse(req.url, true);
+  var query = url_parts.query;
+  console.log('abcd',query.url);
+  
+  axios.get("https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url="  + query.url)
+    // console.log(response.status)
+    .then(response => {
+      response
+      res.send({response:(response.data)})
+      console.log(response.data.audits.metri)
+    })
+   
+    
+  })
+  
+function errBack (cb,THIS,logger) {
+
+  var 
+  self,
+  EB=function(fn,r,e){
+      if (logger===false) {
+          fn.log=fn.info=fn.warn=fn.errlog=function(){};       
+      } else {
+          fn.log        = logger?logger.log   : console.log.bind(console);
+          fn.info       = logger?logger.info  : console.info.bind(console);
+          fn.warn       = logger?logger.warn  : console.warn.bind(console);
+          fn.errlog     = logger?logger.error : console.error.bind(console);
+      }
+      fn.result=r;
+      fn.error=e;
+      return (self=fn);
+  };
+
+
+      return EB(
+
+          function () {
+              return cb.apply (THIS,Array.prototype.concat.apply([undefined],arguments));
+          },
+          
+      );
+}
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 
 
 
 app.get('/api/hello', (req, res) => {
+
+
   var url_parts = url.parse(req.url, true);
   var query = url_parts.query;
   console.log('abcd',query.url);
-  axios.get(query.url)
-  .then(response => {
-    response.data
-    res.send({test:response.data})
+
+
+  var statuscodes = []
+
+ 
+
+ 
+ var TLD_url = query.url;
+ 
+ https.get(TLD_url, function(res2){
+  //     var body = [];
+      var callback=errBack(res2);
+      
+      callback.info({statusCode:res2.statusCode});
+      statuscodes.push(res2.statusCode)
+})
+
+axios.get(query.url)
+  .then(response => {    
+      // response.data
+      console.log('my status' ,statuscodes)
+      res.send({test:response.data, statuscodes:statuscodes})
     
   })
-});
-
-// axios.post('https://www.discernliving.com/')
-// .then(response => {
-//      console.log(response)
-// })
-
-
-// app.post('/api/hello', (req, res) => {
-//   console.log(req.body);
-//   res.send(
-//     `I received your POST request. This is what you sent me: ${req.body.post}`,
-//   );
-// });
-
-// app.get('/api/hello', (req, res) => {
-//   res.send({ express: 'Hello From Express', array: [1,2,3,4]}
-// );
   
 
   
-// });
-
-app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`,
-  );
 });
-
-
 
 
 

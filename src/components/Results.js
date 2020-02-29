@@ -36,7 +36,13 @@ class Results extends Component {
 		loaded: false,
 		siteurl: this.props.siteurl,
 		checkIframe: this.props.checkIframe,
-		checkJs: this.props.checkJs
+		checkJs: this.props.checkJs,
+		lang: this.props.lang,
+		statuscodes: this.props.statuscodes,
+		responseTime: (this.props.responseTime),
+		responseTimeMobile: (this.props.responseTimeMobile),
+
+		loaded:false
 	}
 
 	
@@ -46,6 +52,8 @@ class Results extends Component {
 	// 		this.value = "";
 	// 	 };
 	// }
+
+	
 
 	pass = ()=>{
 		this.props.dispatch(passed())
@@ -85,6 +93,7 @@ class Results extends Component {
 	h1Tag = () =>{
 		if (this.state.h1){
 			return (
+				
 				<Tick pass={this.pass}/>	
 			)
 		}else{
@@ -291,6 +300,45 @@ class Results extends Component {
 		}
 	}
 
+	language = () =>{
+		if (this.state.lang){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	statuscodescheck =()=>{
+		if(this.state.statuscodes==301){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	pageloadtime = () =>{
+		if(this.props.responseTime>3){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
 
 
 	// count=(flag,max)=>{
@@ -327,17 +375,17 @@ class Results extends Component {
 	// 	// })
 
 	// }
-	componentWillMount(){
+	// componentWillMount(){
 		
-      this.setState({
-		  beforeload: (new Date()).getTime()
-	  })
-	}
-	pageloadingtime(){
-	  var afterload = (new Date()).getTime();
-	  this.setState({seconds:(afterload-this.state.beforeload)/1000})
+    //   this.setState({
+	// 	  beforeload: (new Date()).getTime()
+	//   })
+	// }
+	// pageloadingtime(){
+	//   var afterload = (new Date()).getTime();
+	//   this.setState({responseTime: this.state.responseTime})
 		
-	}
+	// }
 
 
 	// allImageData(){
@@ -357,7 +405,7 @@ class Results extends Component {
 	
 
 		const {passed,failed, warnings,total}= this.props;
-		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription ,loaded, siteurl, checkIframe, checkJs} = this.state;
+		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription ,loaded, siteurl, checkIframe, checkJs ,lang, statuscodes} = this.state;
 		console.log('test',this.props.imageData);
 		const imgData=this.props.imageData;
 		const imgurl= this.props.imgurl
@@ -367,6 +415,9 @@ class Results extends Component {
 			Object.keys(imgData).map(i => (
 			arr.push(JSON.parse(imgData[i].size/1000)+' kb ' + 'url:' + imgurl[i])
 		))}
+		// if (!loaded) {
+		// 	return <div>Loading...</div>;
+		//   } else {
 		
 		
     return (
@@ -459,11 +510,7 @@ class Results extends Component {
 	        		<td>{arr.join(', ')}</td>
 	        	</tr>
                 {/* {console.log((imgData[i].size/1000))} */}
-				<tr>
-	        		<th><Link to=''><p>Page Load Time</p></Link></th>
-	        		<td>{this.state.seconds}</td>
-	        	</tr>
-
+				
 				<tr>
 	        		<th><Link to='/metaDescription'><p>{this.checkIframe()}Iframe</p></Link></th>
 	        		<td>{checkIframe ? ('Iframe detected (This reduces SEO performance)') : ('No Iframe')}<br/></td>
@@ -474,41 +521,24 @@ class Results extends Component {
 	        		<td>{checkJs ? ('JavaScript is being used') : ('JavaScript is not being used')}<br/></td>
 	        	</tr>
 
+				<tr>
+	        		<th><Link to='/metaDescription'><p>{this.language()}Language Tag</p></Link></th>
+	        		<td>{lang ? ('Language Tag is present') : ('Language Tag is not present')}<br/></td>
+	        	</tr>
+				<tr>
+	<th><Link to='/metaDescription'><p>{this.statuscodescheck()}301 redirect</p></Link></th>
+	        		<td>{statuscodes == 301? ('301 redirect present') : ( 'status code is ' + statuscodes)}<br/></td>
+	        	</tr>
+				<tr>
+	<th><Link to='/metaDescription'><p>{this.pageloadtime()}Page Load Time</p></Link></th>
+	        		<td>Desktop: {this.props.responseTime}<br/><br/>Mobile: {this.props.responseTimeMobile}</td>
+	        	</tr>
+
 
 					
 	        </table>
 
-			{/* <div id="loadingtime"></div>
-			{
-				Object.keys(imgData).map(i => (
-				
-                  <p key={i}>{JSON.parse(imgData[i].size/1000)}</p>
-				))
-
-				}
-			
-			<p></p> */}
-
-{/* <WebView
-  ref={webview => {
-    this.webView = webview;
-  }}
-  onLoadEnd={this.onWebViewLoad}
-  onMessage={this.messageEvent}
-  startInLoadingState={true}
-  javaScriptEnabled={true}
-  source={{html: `<iframe id="iframe1" width="800" height="350" src={siteurl} onLoad={()=>this.pageloadingtime()}></iframe>`}}
-/> */}
-
-
-				<iframe id="iframe1" width="800" height="350" src={siteurl} onLoad={()=>this.pageloadingtime()}></iframe>
-				<input type="button" value="Reload" onClick="Reload();"/>
-				{this.state.seconds}
-				
-
-
-
-
+	
 				
 	      </div>
 		  

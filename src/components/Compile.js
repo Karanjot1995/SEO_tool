@@ -33,7 +33,11 @@ class Compile extends Component {
     imgurl:[],
     siteurl: "",
     checkIframe: false,
-    checkJs: false
+    checkJs: false,
+    lang: false,
+    statuscodes: false,
+    responseTime: 'Getting page load time for desktop...',
+    responseTimeMobile: 'Getting page load time mobile...'
 
   }
 
@@ -58,6 +62,9 @@ class Compile extends Component {
 
 
     //let path = this.context.router.route.location.search;
+
+    
+    var keyword="BMW"
     const searchParams = new URLSearchParams(this.context.router.history.location.search);
      const url=searchParams.get('url');
      this.setState({
@@ -66,18 +73,50 @@ class Compile extends Component {
      if(url!==""&&url!==null && url!==undefined){
        
      }
+
     console.log('path',url);
+    this.callApi2(url)
+    .then((res)=>
+    this.setState({
+      responseTimeMobile: (Math.round((res.response.lighthouseResult.timing.total/1000  + Number.EPSILON) * 100) / 100+ 's'),
+      responseTime: (res.response.lighthouseResult.audits.interactive.displayValue)
+
+    })    
+    //res.loadtiming.lighthouseResult.timing.total/1000
+    )
     this.callApi(url)
       .then((res) => 
-        res.test)
+        // console.log(res.statuscodes)
+        this.setState({
+          statuscodes: res.statuscodes,
+        })
+    )
+    this.callApi(url)
+      .then((res) => 
+        res.test
+        )
         // this.setState({ response: res.test }))
       .then((html) => {
         const doc = new DOMParser().parseFromString(html, "text/html");
         console.log(doc)
         const title = doc.getElementsByTagName('title')[0].innerHTML;
+        console.log(title.includes("bmw"))
+        // title.
+
+
         console.log(title)
       var metaDescription = doc.getElementsByTagName('meta')['description'];
       metaDescription= metaDescription?metaDescription.getAttribute("content").length: 0 ;
+
+
+
+      var lang = doc.querySelector('html')['lang']
+      lang  = lang? true: false
+      if (lang===true){
+        this.setState({
+          lang: true
+        })
+      }
 
 
       //OG metas----------------
@@ -180,18 +219,18 @@ class Compile extends Component {
       for ( var i=0, len = imgElems.length; i < len; i++ ) {
        
 
-        if((imgElems[i].src || imgElems[i].href).indexOf('localhost')>-1){
-         imgs[i] = (imgElems[i].src || imgElems[i].href);
-          imgs[i]= imgs[i].split('//localhost:');
-          console.log(imgs[i][0])
-          imgs[i] = imgs[i][1].slice(4)
-          imgs[i] = (`https://cors-anywhere.herokuapp.com/`+`${url}`+`${imgs[i]}`)
-          console.log(imgs[i])
-          imgurl.push(imgs[i])
-        //  console.log(imgs)
-        }else{
-          //imgs[i] = "https://cors-anywhere.herokuapp.com/https://www.discernliving.com/assets/b282de6d07c6a475cc5d45832e78b327.png"
-        }
+        // if((imgElems[i].src || imgElems[i].href).indexOf('localhost')>-1){
+        //  imgs[i] = (imgElems[i].src || imgElems[i].href);
+        //   imgs[i]= imgs[i].split('//localhost:');
+        //   console.log(imgs[i][0])
+        //   imgs[i] = imgs[i][1].slice(4)
+        //   imgs[i] = (`https://cors-anywhere.herokuapp.com/`+`${url}`+`${imgs[i]}`)
+        //   console.log(imgs[i])
+        //   imgurl.push(imgs[i])
+        // //  console.log(imgs)
+        // }else{
+        //   //imgs[i] = "https://cors-anywhere.herokuapp.com/https://www.discernliving.com/assets/b282de6d07c6a475cc5d45832e78b327.png"
+        // }
         // if(imgs[i].indexOf('http')>-1){
         //   imgs[i] = (`https://cors-anywhere.herokuapp.com/`+`${imgs[i]}`)
 
@@ -237,7 +276,7 @@ class Compile extends Component {
 
       Promise.all(imgurl.map(u=>fetch(u))).then(responses =>
         Promise.all(responses.map(res => 
-          blob = res.blob()
+          blob = res. blob()
         ))
     ).then(iData => {
       
@@ -255,7 +294,7 @@ class Compile extends Component {
  
 
            
-      console.log(title);
+      console.log(title ,h1);
      
 			this.setState({
 				title: title.length,
@@ -325,10 +364,22 @@ class Compile extends Component {
     if (response.status !== 200) throw Error(body.message);
     // console.log(body)
   
-    return body;
+    
+    return body ;
 
 
   };
+
+  callApi2 = async (param) => {
+    const response = await fetch('/api/goo?url='+param);
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    console.log(body)
+
+    return body
+  }
+  
+
 
 
 
@@ -365,7 +416,7 @@ class Compile extends Component {
 
   render() {
 
-    const { loaded, title, metaDescription, h1tag, h2tag,h3tag,h4tag , sitemap, robots, imgTitle, imgAlt, ogtitle, ogtype, ogurl, ogsite_name, ogimage, ogdescription, imageData, imgurl ,siteurl, checkIframe, checkJs} = this.state
+    const { loaded, title, metaDescription, h1tag, h2tag,h3tag,h4tag , sitemap, robots, imgTitle, imgAlt, ogtitle, ogtype, ogurl, ogsite_name, ogimage, ogdescription, imageData, imgurl ,siteurl, checkIframe, checkJs, lang, statuscodes, responseTime,responseTimeMobile} = this.state
     if (!loaded) {
       return <div>Loading...</div>;
     } else {
@@ -376,7 +427,7 @@ class Compile extends Component {
                  h4tag={h4tag} sitemap={sitemap} robots={robots} imgTitle={imgTitle} imgAlt={imgAlt}
                  ogtitle={ogtitle} ogtype={ogtype} ogurl={ogurl} ogsite_name={ogsite_name}
                  ogimage= {ogimage} ogdescription= {ogdescription} imageData= {imageData} imgurl={imgurl} siteurl={siteurl} checkIframe={checkIframe}
-                 checkJs={checkJs}
+                 checkJs={checkJs} lang={lang} statuscodes={statuscodes} responseTime={responseTime} responseTimeMobile={responseTimeMobile}
         />
 
       </div>

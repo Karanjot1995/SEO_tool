@@ -1,6 +1,6 @@
-import axios from "axios";
+// import axios from "axios";
 
-export default axios.create({
-  baseURL: "https://www.discernliving.com/",
-  responseType: "json"
-});
+// export default axios.create({
+//   baseURL: "https://www.discernliving.com/",
+//   responseType: "json"
+// });
