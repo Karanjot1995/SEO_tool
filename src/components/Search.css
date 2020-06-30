@@ -26,11 +26,21 @@
   font-size: 20px;
   width: 600px;
 }
+.keyword{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+}
+.keyword input{
+  height:40px;
+  margin:30px
+}
 .checkup-input:focus{
   border:2px solid #e67e22;
   outline: none
 }
-.checkup-form{
+.checkup-form .url{
   display: flex;
   justify-content: center;
   height:70px;

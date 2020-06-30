@@ -37,13 +37,32 @@ class Compile extends Component {
     lang: false,
     statuscodes: false,
     responseTime: 'Getting page load time for desktop...',
-    responseTimeMobile: 'Getting page load time mobile...'
+    responseTimeMobile: 'Getting page load time mobile...',
+    pageWeight: 'Getting page weight....',
+    keywordpresent: false,
+    canonical: false,
+    noindextag: false,
+    cached: "",
+    indexing: "",
+    goodurl: false
+
 
   }
 
 
 
   componentDidMount() {
+
+  //   const person = {
+  //     name: "Obaseki Nosa",
+  //     location: "Lagos",
+  // }
+  // window.localStorage.setItem('user', JSON.stringify(person));
+  // var KeyName = window.localStorage.key(2);
+
+  // console.log(JSON.parse(window.localStorage.getItem('user')), KeyName)
+
+    
 
     // var imageUrl = 'https://cors-anywhere.herokuapp.com/https://d1q6kvh8ntrf2h.cloudfront.net/s3fs-public/styles/spotlight_image/public/blog_woodenfurniture_rectangle.jpg?itok=P5wE4UKa';
     // var blob = null;
@@ -62,28 +81,105 @@ class Compile extends Component {
 
 
     //let path = this.context.router.route.location.search;
-
     
-    var keyword="BMW"
+    var keyword= this.props.keyword;
     const searchParams = new URLSearchParams(this.context.router.history.location.search);
-     const url=searchParams.get('url');
+     var url=searchParams.get('url');
      this.setState({
        siteurl:url
      })
      if(url!==""&&url!==null && url!==undefined){
        
      }
+     if(url.indexOf('https://')==-1 && url.indexOf('www.')==-1){
+       url = 'https://www.'+url
+     }else if(url.indexOf('https://')==-1 && url.indexOf('www.')!=-1){
+      url = 'https://'+url
+     }
+    //  url = encodeURI(url)
+    //  console.log(url)
+     url = decodeURI(url)
+
+     var urlcheck = url.replace('https://www.','')
+     console.log(urlcheck)
+     var format= /[ ),!@$%^&*;:,(_><]/
+      console.log(format.test(urlcheck))
+
+     if(format.test(urlcheck)!=true){
+      this.setState({
+        goodurl: true
+      })
+     } else {
+      this.setState({
+        goodurl: false
+      })
+    }   
+    // console.log(new Date());
+
+
+    //  fetch(`https://www.google.com/search?q=site:${url}`)
+    //  .then(response=>
+    //   console.log(response.json())
+
+    //  )
 
     console.log('path',url);
     this.callApi2(url)
     .then((res)=>
     this.setState({
       responseTimeMobile: (Math.round((res.response.lighthouseResult.timing.total/1000  + Number.EPSILON) * 100) / 100+ 's'),
-      responseTime: (res.response.lighthouseResult.audits.interactive.displayValue)
+      responseTime: (res.response.lighthouseResult.audits.interactive.displayValue),
+      responseTimenum: (res.response.lighthouseResult.audits.interactive.numericValue/1000),
+      pageWeight: res.response.lighthouseResult.audits['total-byte-weight'].displayValue,
+      pageWeightnum: (res.response.lighthouseResult.audits['total-byte-weight'].numericValue/1000),
+      loaded:true
 
-    })    
+    })  ,  
+    // console.log(this.state.pageWeight)
     //res.loadtiming.lighthouseResult.timing.total/1000
     )
+
+    this.callApi4(url)
+    .then((res) => {
+
+      const html = res.html
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      var indexing = doc.getElementById("result-stats")
+      indexing = indexing? indexing.textContent: null
+      console.log(indexing)
+      this.setState({
+        indexing: indexing,
+      })
+
+    }
+     
+
+    )
+    // .then((html) => {
+    //   const doc = new DOMParser().parseFromString(html, "text/html");
+    //   console.log(doc)
+    //   const indexing = doc.getElementById("result-stats")
+    //   console.log(indexing)
+    // })
+
+    this.callApi3(url)
+      .then((res) => 
+        res.response
+        )
+      .then((html) => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        // console.log(doc)
+        var cached= doc.getElementById("bN015htcoyT__google-cache-hdr")
+        cached = cached? cached.firstChild.textContent : false
+        console.log(cached)
+        this.setState({
+          cached: cached
+        })
+      })
+
+
+      
+
     this.callApi(url)
       .then((res) => 
         // console.log(res.statuscodes)
@@ -91,6 +187,9 @@ class Compile extends Component {
           statuscodes: res.statuscodes,
         })
     )
+
+
+
     this.callApi(url)
       .then((res) => 
         res.test
@@ -100,13 +199,36 @@ class Compile extends Component {
         const doc = new DOMParser().parseFromString(html, "text/html");
         console.log(doc)
         const title = doc.getElementsByTagName('title')[0].innerHTML;
-        console.log(title.includes("bmw"))
-        // title.
+        const canonical = doc.querySelector("[rel='canonical']")
+        var noindextag =doc.querySelector("[name='robots']")
+        noindextag = noindextag ?  noindextag.content.match('noindex'): false
+     
+        console.log(canonical ,noindextag)
+        // var  keyword = this.props.keyword + /i/g;
+        // keyword = /keyword;
+        console.log(this.props.keyword)
+        // console.log( title.match(keyword));
+        var chktitle = title.toLowerCase()
+        var chkkeyword = keyword.toLowerCase()
+
+          var result= chktitle.match(chkkeyword);
+         if(chktitle.match(chkkeyword) && chkkeyword !== ""){
+           this.setState({
+            keywordpresent: `${keyword} keyword is present in the title `,
+           })
+         }
+       
 
 
         console.log(title)
-      var metaDescription = doc.getElementsByTagName('meta')['description'];
-      metaDescription= metaDescription?metaDescription.getAttribute("content").length: 0 ;
+      var metaDescription = doc.getElementsByTagName('meta')['description'] || doc.getElementsByTagName('meta')['twitter:description'];
+      if(metaDescription.getAttribute("content")!=null){
+        metaDescription= metaDescription.getAttribute("content")
+      } else{
+        metaDescription= 0
+      }
+      
+      console.log(metaDescription)
 
 
 
@@ -280,7 +402,7 @@ class Compile extends Component {
         ))
     ).then(iData => {
       
-      this.setState({imageData:iData,loaded: true, imgurl:imgurl});
+      this.setState({imageData:iData, imgurl:imgurl});
       console.log('test',this.state.imageData, imgurl );
       
     })
@@ -309,7 +431,11 @@ class Compile extends Component {
         ogurl: ogurl,
         ogsite_name: ogsite_name,
         ogimage: ogimage,
-        ogdescription: ogdescription
+        ogdescription: ogdescription,
+        canonical: canonical,
+        noindextag: noindextag,
+
+        // loaded:true
 			})
         
       })   
@@ -381,6 +507,24 @@ class Compile extends Component {
   
 
 
+  callApi3 = async (param) => {
+    const response = await fetch('/api/cache?url='+param);
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    // console.log(body)
+
+    return body
+  }
+
+
+  callApi4 = async (param) => {
+    const response = await fetch('/api/indexing?url='+param);
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    // console.log(body)
+
+    return body
+  }
 
 
 
@@ -416,7 +560,9 @@ class Compile extends Component {
 
   render() {
 
-    const { loaded, title, metaDescription, h1tag, h2tag,h3tag,h4tag , sitemap, robots, imgTitle, imgAlt, ogtitle, ogtype, ogurl, ogsite_name, ogimage, ogdescription, imageData, imgurl ,siteurl, checkIframe, checkJs, lang, statuscodes, responseTime,responseTimeMobile} = this.state
+    const { loaded, title, metaDescription, h1tag, h2tag,h3tag,h4tag , sitemap, robots, imgTitle, imgAlt, ogtitle, ogtype, ogurl, ogsite_name, ogimage, 
+      ogdescription, imageData, imgurl ,siteurl, checkIframe, checkJs, lang, statuscodes, responseTime,responseTimenum,responseTimeMobile,pageWeight, 
+      pageWeightnum, keywordpresent, canonical, noindextag, cached, indexing, goodurl} = this.state
     if (!loaded) {
       return <div>Loading...</div>;
     } else {
@@ -428,6 +574,8 @@ class Compile extends Component {
                  ogtitle={ogtitle} ogtype={ogtype} ogurl={ogurl} ogsite_name={ogsite_name}
                  ogimage= {ogimage} ogdescription= {ogdescription} imageData= {imageData} imgurl={imgurl} siteurl={siteurl} checkIframe={checkIframe}
                  checkJs={checkJs} lang={lang} statuscodes={statuscodes} responseTime={responseTime} responseTimeMobile={responseTimeMobile}
+                 pageWeight={pageWeight} keyword={this.props.keyword} responseTimenum={responseTimenum} pageWeightnum={pageWeightnum} keywordpresent={keywordpresent}
+                 canonical={canonical} noindextag={noindextag} cached={cached} indexing={indexing} goodurl={goodurl}
         />
 
       </div>
@@ -441,7 +589,8 @@ function mapStateToProps(state) {
 		passed: state.passed,
 		failed: state.failed,
     warnings: state.warnings,
-    total: state.total
+    total: state.total,
+    keyword: state.keyword,
 	}
 }
 

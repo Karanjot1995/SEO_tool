@@ -1,6 +1,7 @@
-import {PASSED , FAILED , WARNING} from '../actions'
+import {PASSED , FAILED , WARNING, KEYWORDS, URL} from '../actions'
 
 const initialState = {
+  url:'',
   score: 0,
   passed : 0,
   failed: 0,
@@ -12,13 +13,22 @@ const initialState = {
         ],
 
   total: 0,
+  keyword: ""
   // stroke: 'rgb(230, 126, 34)'
 }
 
+
 function reducer (state = initialState , action) {
+  
   switch(action.type) {
+    case "URL" : 
+      return Object.assign({},state,{
+       
+        url: action.url
+
+      })
     case "PASSED":
-      return {
+      return Object.assign({},state,{
         passed: state.passed + 1,
         failed: state.failed,
         warnings: state.warnings,
@@ -28,10 +38,11 @@ function reducer (state = initialState , action) {
              {text: 'Warnings', value: (state.warnings)},
           ],
         total: state.total + 1,
+        
         // stroke: state.stroke
-    };
+    });
     case "FAILED" :
-    return {
+      return Object.assign({},state,{
         passed: state.passed,
         failed: state.failed + 1,
         warnings: state.warnings,
@@ -41,11 +52,12 @@ function reducer (state = initialState , action) {
              {text: 'Warnings', value: (state.warnings)},
           ],
         total: state.total + 1,
+
         // stroke: state.stroke
-      }
+      })
       case "WARNING" :
-      return {
-        passed: state.passed,
+        return Object.assign({},state,{
+          passed: state.passed,
         failed: state.failed ,
         warnings: state.warnings + 1,
         data: [{value: 10},
@@ -54,9 +66,16 @@ function reducer (state = initialState , action) {
              {text: 'Warnings', value: (state.warnings + 1)},
           ],
         total: state.total + 1,
+
         // stroke: state.stroke
 
-      }
+      })
+      case "KEYWORDS" : 
+      return Object.assign({},state,{
+       
+        keyword: action.keyword1
+
+      })
       /*case "TOTAL" :
       return {
         passed: state.passed,

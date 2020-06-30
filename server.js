@@ -3,6 +3,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const bodyParser = require('body-parser');
 var fs = require('fs');
+const puppeteer = require('puppeteer');
 
 var http = require('http');
 var http = require('follow-redirects').http;
@@ -22,6 +23,129 @@ const url = require('url');
 
 
 var request = require('request');
+// const {UrlChecker} = require('broken-link-checker');
+
+// const urlChecker = new UrlChecker(options)
+//   .on('error', (error) => {})
+//   .on('queue', () => {})
+//   .on('link', (result, customData) => {})
+//   .on('end', () => {});
+
+// urlChecker.enqueue("https://www.discernliving.com/", customData);
+
+// (async () => {
+//   const browser = await puppeteer.launch();
+//   const page = await browser.newPage();
+
+//   await page.goto('https://search.google.com/test/mobile-friendly?url=www.bmw.in');
+
+//   const textContent = await page.evaluate(() => {
+//     return document.data
+//   });
+
+//   console.log(textContent); /* No Problem Mate */
+
+//   browser.close();
+// })();
+
+// app.get('/api/mobile', (req,res)=>{
+//   var url_parts = url.parse(req.url, true);
+//     var query = url_parts.query;
+//     puppeteer
+//       .launch()
+//       .then(browser => browser.newPage())
+//       .then(page => {
+//         return page.goto('https://search.google.com/test/mobile-friendly?url=www.bmw.in')
+//         .then(setTimeout(
+//           function() {
+//             console.log(page.content())
+//             return page.content();
+            
+//           }),200
+//         ) 
+//       })
+//       .then(html => {
+//         const $ = cheerio.load(html);
+        
+
+//           res.send(html)
+//         })
+       
+
+// })
+
+
+// const serp = require("serp");
+
+
+// function abc(){
+//   var options = {
+//     numberOfResults : true,
+//     qs : {
+//       q   : "site:https://www.discernliving.com"
+//     },
+//     proxyList : proxyList
+//   };
+   
+//   const numberOfResults = await serp.search(options);
+//   console.log(numberOfResults)
+// }
+
+ 
+
+
+
+
+app.get('/api/indexing', (req,res)=>{
+  var url_parts = url.parse(req.url, true);
+    var query = url_parts.query;
+    puppeteer
+      .launch()
+      .then(browser => browser.newPage())
+      .then(page => {
+        return page.goto('https://www.google.com/search?q=site:'+query.url).then(function() {
+          console.log(page.content())
+          return page.content();
+          
+        });
+      })
+      .then(html => {
+        const $ = cheerio.load(html);
+        
+
+          res.send({html:html})
+        })
+       
+
+      })
+
+
+// app.get('/api/indexing', (req,res)=>{
+//   // https://search.google.com/test/mobile-friendly?url=http%3A%2F%2Fbmw.in%2F
+//   var url_parts = url.parse(req.url, true);
+//   var query = url_parts.query;
+//   axios.get("https://www.google.com/search?q=site:"  + query.url)
+//   // console.log(response.status)
+//   .then(response => {
+//     // response
+//   //  console.log(response)
+//    res.send({response: response.data})
+//   })
+
+// })
+// app.get('/api/indexing', (req,res)=>{
+//   // https://search.google.com/test/mobile-friendly?url=http%3A%2F%2Fbmw.in%2F
+//   var url_parts = url.parse(req.url, true);
+//   var query = url_parts.query;
+//    await axios.get("https://search.google.com/test/mobile-friendly?url="  + query.url)
+//   // console.log(response.status)
+//   .then(response => {
+//     // response
+//   //  console.log(response)
+//    res.send({response: response.data})
+//   })
+
+// })
 
 
 
@@ -30,17 +154,34 @@ var request = require('request');
 
 
 var urls =[];
+app.get('/api/cache', (req,res)=>{
+  
+  var url_parts = url.parse(req.url, true);
+
+  var a ="24"
+  var query = url_parts.query;
+  axios.get("https://webcache.googleusercontent.com/search?q=cache:"  + query.url)
+    // console.log(response.status)
+    .then(response => {
+      response
+      res.send({response:(response.data)})
+    })
+
+})
+
 app.get('/api/goo',(req,res)=>{
   var url_parts = url.parse(req.url, true);
   var query = url_parts.query;
   console.log('abcd',query.url);
+
+
   
   axios.get("https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url="  + query.url)
     // console.log(response.status)
     .then(response => {
       response
       res.send({response:(response.data)})
-      console.log(response.data.audits.metri)
+      // console.log(response.data.audits.metri)
     })
    
     
@@ -108,10 +249,15 @@ axios.get(query.url)
       res.send({test:response.data, statuscodes:statuscodes})
     
   })
+
   
 
   
 });
+
+
+
+
 
 
 

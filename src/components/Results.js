@@ -40,9 +40,18 @@ class Results extends Component {
 		lang: this.props.lang,
 		statuscodes: this.props.statuscodes,
 		responseTime: (this.props.responseTime),
+		responseTimenum:this.props.responseTimenum,
 		responseTimeMobile: (this.props.responseTimeMobile),
+		pageWeight: this.props.pageWeight,
+		pageWeightnum: this.props.pageWeightnum,
 
-		loaded:false
+		keywordpresent: this.props.keywordpresent,
+		loaded:false,
+		canonical: this.props.canonical,
+		noindextag: this.props.noindextag,
+		cached: this.props.cached,
+		indexing: this.props.indexing,
+		goodurl: this.props.goodurl
 	}
 
 	
@@ -61,6 +70,7 @@ class Results extends Component {
 	fail = () =>{
 		this.props.dispatch(failed())
 	}
+
 	titlepass = (current,max) => {
 
 		if(current && current < max){
@@ -77,7 +87,7 @@ class Results extends Component {
 	}
 	metapassed = (max) => {
 
-		if(this.state.metaDescription && this.state.metaDescription < max){
+		if(this.state.metaDescription.length && this.state.metaDescription.length < max && this.state.metaDescription!=0){
 			
 	  	return (
 	   		<Tick pass={this.pass}/>	
@@ -314,7 +324,7 @@ class Results extends Component {
 	}
 
 	statuscodescheck =()=>{
-		if(this.state.statuscodes==301){
+		if(this.state.statuscodes!==404){
 			return (
 				<Tick pass={this.pass}/>	
 			)
@@ -327,7 +337,7 @@ class Results extends Component {
 	}
 
 	pageloadtime = () =>{
-		if(this.props.responseTime>3){
+		if(this.state.responseTimenum<4){
 			return (
 				<Tick pass={this.pass}/>	
 			)
@@ -335,6 +345,106 @@ class Results extends Component {
 		
 			return(
 				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	pageweight = () =>{
+		if(this.state.pageWeightnum<1000){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	keywordpresent = () =>{
+		
+		if(this.state.keywordpresent !== false ){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	canonicalpresent= () =>{
+		if(this.state.canonical){
+			return (
+				<Tick pass={this.pass}/>	
+			)
+		}else{
+		
+			return(
+				 <Cross fail={this.fail}/>
+			)
+		}
+	}
+
+	pageindexed = () =>{
+		if(this.state.noindextag){
+			return (
+				<Cross fail={this.fail}/>
+				
+			)
+		}else{
+		
+			return(
+				<Tick pass={this.pass}/>	
+			)
+		}
+	}
+
+	googleindexing = () => {
+		var indexing = this.state.indexing
+			// var matches = indexing.match(/\d+/g);
+		if(indexing!=null){
+			indexing = indexing.replace(/,/g, "")
+			console.log(typeof(indexing),indexing)
+
+			var matches = indexing.match(/(\d+)/); 
+		var number= matches[0];
+		// if (matches) {
+		// number = Number(matches[0].replace(',', ''));
+		console.log(number);
+		if(number>1000){
+			return <Tick pass={this.pass}/>
+		}else{
+		
+			return(
+				<Cross fail={this.fail}/>
+			)
+		}
+		}else{
+			return(
+				<Cross fail={this.fail}/>
+			)
+		}
+		// } else console.log("didnt find anything.");
+	}
+
+
+	goodurlstructure  = () =>{
+		console.log(this.state.goodurl)
+	 
+		if(this.state.goodurl){
+			return (
+				<Tick pass={this.pass}/>	
+				
+				
+			)
+		}else{
+		
+			return(
+				<Cross fail={this.fail}/>
 			)
 		}
 	}
@@ -405,7 +515,8 @@ class Results extends Component {
 	
 
 		const {passed,failed, warnings,total}= this.props;
-		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription ,loaded, siteurl, checkIframe, checkJs ,lang, statuscodes} = this.state;
+		const{ title,metaDescription,h1,h2,h3,h4, sitemap, robots, imgTitle, imgAlt, ogsite_name, ogtitle, ogtype, ogurl, ogimage, ogdescription ,
+			loaded, siteurl, checkIframe, checkJs ,lang, statuscodes,noindextag,canonical, cached, indexing,goodurl} = this.state;
 		console.log('test',this.props.imageData);
 		const imgData=this.props.imageData;
 		const imgurl= this.props.imgurl
@@ -418,6 +529,7 @@ class Results extends Component {
 		// if (!loaded) {
 		// 	return <div>Loading...</div>;
 		//   } else {
+
 		
 		
     return (
@@ -436,7 +548,7 @@ class Results extends Component {
 
 	        	<tr>
 	        		<th><Link to='/metaDescription'><p>{this.metapassed(250)}Meta Descrpition</p></Link></th>
-	        		<td>The meta description of your page has a length of {metaDescription} characters. Most search engines will truncate meta descriptions to 160 characters.</td>
+	        		<td>The meta description of your page has a length of {metaDescription.length} characters. Most search engines will truncate meta descriptions to 250 characters.</td>
 	        	</tr>
 						<tr>
 	        	  <th><Link to='/h1tag'><p >{this.h1Tag(h1,0)}H1 Heading Tag</p></Link></th>
@@ -505,10 +617,10 @@ class Results extends Component {
 	        		<th><Link to='/metaDescription'><p>{this.ogdescription(ogdescription,0)}og:description</p></Link></th>
 	        		<td>{ogdescription ? ('og:description present') : ('og:description missing')}<br/>{ogdescription}</td>
 	        	</tr>
-				<tr>
+				{/* <tr>
 	        		<th><Link to='/metaDescription'><p>Image Size</p></Link></th>
 	        		<td>{arr.join(', ')}</td>
-	        	</tr>
+	        	</tr> */}
                 {/* {console.log((imgData[i].size/1000))} */}
 				
 				<tr>
@@ -526,13 +638,58 @@ class Results extends Component {
 	        		<td>{lang ? ('Language Tag is present') : ('Language Tag is not present')}<br/></td>
 	        	</tr>
 				<tr>
-	<th><Link to='/metaDescription'><p>{this.statuscodescheck()}301 redirect</p></Link></th>
-	        		<td>{statuscodes == 301? ('301 redirect present') : ( 'status code is ' + statuscodes)}<br/></td>
+	               <th><Link to='/metaDescription'><p>{this.statuscodescheck()}Page status code</p></Link></th>
+	        		<td>{statuscodes !== 404? ( 'status code is ' + statuscodes): 'this is an error page'}<br/></td>
 	        	</tr>
 				<tr>
-	<th><Link to='/metaDescription'><p>{this.pageloadtime()}Page Load Time</p></Link></th>
+	                <th><Link to='/metaDescription'><p>{this.pageloadtime()}Page Load Time</p></Link></th>
 	        		<td>Desktop: {this.props.responseTime}<br/><br/>Mobile: {this.props.responseTimeMobile}</td>
 	        	</tr>
+
+
+				<tr>
+                  	<th><Link to='/metaDescription'><p>{this.pageweight()}Page Weight</p></Link></th>
+	        		<td>{this.props.pageWeight}. Page weight should be under 1000 Kb<br/></td>
+	        	</tr>
+
+
+				{this.props.keyword!=="" && this.props.keyword!==" "? <tr>
+	                <th><Link to='/metaDescription'><p>{this.keywordpresent()}keyword</p></Link></th>
+	        		<td>{this.state.keywordpresent}<br/></td>
+	        	</tr> : ""}
+
+				<tr>
+	                <th><Link to='/metaDescription'><p>{this.canonicalpresent()}Canonical</p></Link></th>
+	        		<td>{canonical? canonical.href: 'canonical is missing'}<br/></td>
+	        	</tr>
+				<tr>
+	                <th><Link to='/metaDescription'><p>{this.pageindexed()}index</p></Link></th>
+	        		<td>{noindextag ? "This page is not indexed": "This page is indexed"}<br/></td>
+	        	</tr>
+				<tr>
+	                <th><Link to='/metaDescription'><p>Caching</p></Link></th>
+	        		<td>{cached}<br/></td>
+	        	</tr>
+
+				<tr>
+			        <th><Link to='/metaDescription'><p>{this.googleindexing()}Indexing</p></Link></th>
+	        		<td>{indexing}<br/></td>
+	        	</tr>
+
+				<tr>
+			        <th><Link to='/metaDescription'><p>{this.goodurlstructure()}URL Structure</p></Link></th>
+	        		<td>{goodurl? "URL Structure is SEO friendly": "URL structure is not SEO friendly"}<br/></td>
+	        	</tr>
+
+
+
+{/* <Iframe src="https://search.google.com/test/mobile-friendly?url=www.bmw.in" height-="200px" width="300px"></Iframe> */}
+
+				{/* <tr>
+	<th><Link to='/metaDescription'><p>keyword</p></Link></th>
+	        		<td>{this.state.keyword1}<br/></td>
+	        	</tr> */}
+				{/* <iframe src="site:https://www.discernliving.com" height="200px" width="500px"></iframe> */}
 
 
 					
@@ -544,6 +701,7 @@ class Results extends Component {
 		  
 			</div>
 		);
+			// }
 		
   }
 }
@@ -552,7 +710,8 @@ function mapStateToProps(state) {
 		passed: state.passed,
 		failed: state.failed,
 		warnings: state.warnings,
-		total: state.total
+		total: state.total,
+		keyword: state.keyword
 	}
 }
 
